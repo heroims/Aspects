@@ -59,6 +59,12 @@ typedef NS_OPTIONS(NSUInteger, AspectOptions) {
                             usingBlock:(id)block
                                  error:(NSError **)error;
 
+///Hooking static methods
++ (id<AspectToken>)aspect_hookClassSelector:(SEL)selector
+                                withOptions:(AspectOptions)options
+                                 usingBlock:(id)block
+                                      error:(NSError **)error;
+
 /// Adds a block of code before/instead/after the current `selector` for a specific instance.
 - (id<AspectToken>)aspect_hookSelector:(SEL)selector
                            withOptions:(AspectOptions)options
