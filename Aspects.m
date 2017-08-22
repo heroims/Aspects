@@ -10,10 +10,13 @@
 #import <objc/runtime.h>
 #import <objc/message.h>
 
-#define AspectLog(...)
-//#define AspectLog(...) do { NSLog(__VA_ARGS__); }while(0)
+#ifdef DEBUG
+#define AspectLog(...) do { NSLog(__VA_ARGS__); }while(0)
 #define AspectLogError(...) do { NSLog(__VA_ARGS__); }while(0)
-
+#else
+#define AspectLog(...) 
+#define AspectLogError(...) do { NSLog(__VA_ARGS__); }while(0)
+#endif
 // Block internals.
 typedef NS_OPTIONS(int, AspectBlockFlags) {
 	AspectBlockFlagsHasCopyDisposeHelpers = (1 << 25),
@@ -79,6 +82,94 @@ typedef struct _AspectBlock {
 
 @interface NSInvocation (Aspects)
 - (NSArray *)aspects_arguments;
+@end
+
+
+@implementation AspectsConfig{
+    NSSet *_customClassBlackList;
+    NSDictionary *_customClassMethodBlackList;
+    NSDictionary *_onceHookClassMethodMap;
+    NSDictionary *_onceHookWhiteListClassMethodMap;
+    NSNumber *_instanceMethodOnceHook;
+    NSNumber *_methodOnceHook;
+}
+
++(instancetype)sharedAspectsConfig{
+    static AspectsConfig *sharedAspectsConfig = nil;
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        sharedAspectsConfig = [[self alloc] init];
+    });
+    return sharedAspectsConfig;
+}
+
+-(void)setCustomClassBlackList:(NSSet *)customClassBlackList{
+    if (!_customClassBlackList&&customClassBlackList) {
+        _customClassBlackList=customClassBlackList;
+    }
+}
+
+-(NSSet *)customClassBlackList{
+    return _customClassBlackList;
+}
+
+-(void)setCustomClassMethodBlackList:(NSDictionary *)customClassMethodBlackList{
+    if (!_customClassMethodBlackList&&customClassMethodBlackList) {
+        _customClassMethodBlackList=customClassMethodBlackList;
+    }
+}
+
+-(NSDictionary *)customClassMethodBlackList{
+    return _customClassMethodBlackList;
+}
+
+-(void)setOnceHookClassMethodMap:(NSDictionary *)onceHookClassMethodMap{
+    if (!_onceHookClassMethodMap&&onceHookClassMethodMap) {
+        _onceHookClassMethodMap=onceHookClassMethodMap;
+    }
+}
+
+-(NSDictionary *)onceHookClassMethodMap{
+    return _onceHookClassMethodMap;
+}
+
+-(void)setOnceHookWhiteListClassMethodMap:(NSDictionary *)onceHookWhiteListClassMethodMap{
+    if (!_onceHookWhiteListClassMethodMap&&onceHookWhiteListClassMethodMap) {
+        _onceHookWhiteListClassMethodMap=onceHookWhiteListClassMethodMap;
+    }
+}
+
+-(NSDictionary *)onceHookWhiteListClassMethodMap{
+    return _onceHookWhiteListClassMethodMap;
+}
+
+
+-(void)setInstanceMethodOnceHook:(BOOL)instanceMethodOnceHook{
+    if (!_instanceMethodOnceHook) {
+        _instanceMethodOnceHook=[NSNumber numberWithBool:instanceMethodOnceHook];
+    }
+}
+
+-(BOOL)instanceMethodOnceHook{
+    if (_instanceMethodOnceHook) {
+        return [_instanceMethodOnceHook boolValue];
+    }
+    return YES;
+}
+
+-(void)setMethodOnceHook:(BOOL)methodOnceHook{
+    if (!_methodOnceHook) {
+        _methodOnceHook=[NSNumber numberWithBool:methodOnceHook];
+    }
+}
+
+-(BOOL)methodOnceHook{
+    if (_methodOnceHook) {
+        return [_methodOnceHook boolValue];
+    }
+    return NO;
+}
+
 @end
 
 #define AspectPositionFilter 0x07
@@ -583,6 +674,23 @@ static BOOL aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, Aspec
         return NO;
     }
 
+    // Check class the blacklist
+    if ([AspectsConfig sharedAspectsConfig].customClassBlackList&&[[AspectsConfig sharedAspectsConfig].customClassBlackList containsObject:NSStringFromClass([self class])]) {
+        NSString *errorDescription = [NSString stringWithFormat:@"Class %@ is blacklisted.", NSStringFromClass([self class])];
+        AspectError(AspectErrorClassBlacklisted, errorDescription);
+        return NO;
+    }
+    
+    // Check class and method the blacklist
+    if ([AspectsConfig sharedAspectsConfig].customClassMethodBlackList) {
+        NSSet *customClassMethodBlackList=[[AspectsConfig sharedAspectsConfig].customClassMethodBlackList objectForKey:NSStringFromClass([self class])];
+        if ([customClassMethodBlackList containsObject:selectorName]) {
+            NSString *errorDescription = [NSString stringWithFormat:@"Class %@ Selector %@  is blacklisted.", NSStringFromClass([self class]),selectorName];
+            AspectError(AspectErrorClassMethodBlacklisted, errorDescription);
+            return NO;
+        }
+    }
+
     // Additional checks.
     AspectOptions position = options&AspectPositionFilter;
     if ([selectorName isEqualToString:@"dealloc"] && position != AspectPositionBefore) {
@@ -602,29 +710,79 @@ static BOOL aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, Aspec
         Class klass = [self class];
         NSMutableDictionary *swizzledClassesDict = aspect_getSwizzledClassesDict();
         Class currentClass = [self class];
-
+        
+        
         AspectTracker *tracker = swizzledClassesDict[currentClass];
+        
         if ([tracker subclassHasHookedSelectorName:selectorName]) {
+            if (tracker&&[AspectsConfig sharedAspectsConfig].onceHookWhiteListClassMethodMap) {
+                NSSet *onceHookWhiteList=[[AspectsConfig sharedAspectsConfig].onceHookWhiteListClassMethodMap objectForKey:NSStringFromClass(currentClass)];
+                
+                if (onceHookWhiteList&&[onceHookWhiteList containsObject:selectorName]) {
+                    return YES;
+                }
+            }
+
+            if (![AspectsConfig sharedAspectsConfig].instanceMethodOnceHook&&![AspectsConfig sharedAspectsConfig].methodOnceHook) {
+                if ([AspectsConfig sharedAspectsConfig].onceHookClassMethodMap) {
+                    NSSet *onceHookClassMethodMap =[[AspectsConfig sharedAspectsConfig].onceHookClassMethodMap objectForKey:NSStringFromClass(currentClass)];
+                    if ([onceHookClassMethodMap containsObject:selectorName]) {
+                        
+                    }
+                    else{
+                        return YES;
+                    }
+                }
+                else{
+                    return YES;
+                }
+            }
+            
             NSSet *subclassTracker = [tracker subclassTrackersHookingSelectorName:selectorName];
             NSSet *subclassNames = [subclassTracker valueForKey:@"trackedClassName"];
             NSString *errorDescription = [NSString stringWithFormat:@"Error: %@ already hooked subclasses: %@. A method can only be hooked once per class hierarchy.", selectorName, subclassNames];
             AspectError(AspectErrorSelectorAlreadyHookedInClassHierarchy, errorDescription);
             return NO;
         }
-
+        
         do {
             tracker = swizzledClassesDict[currentClass];
             if ([tracker.selectorNames containsObject:selectorName]) {
                 if (klass == currentClass) {
-                    // Already modified and topmost!
-                    return YES;
+                    if (![AspectsConfig sharedAspectsConfig].methodOnceHook) {
+
+                        // Already modified and topmost!
+                        return YES;
+                    }
+                }
+                if (tracker&&[AspectsConfig sharedAspectsConfig].onceHookWhiteListClassMethodMap) {
+                    NSSet *onceHookWhiteList=[[AspectsConfig sharedAspectsConfig].onceHookWhiteListClassMethodMap objectForKey:NSStringFromClass(currentClass)];
+                    
+                    if (onceHookWhiteList&&[onceHookWhiteList containsObject:selectorName]) {
+                        return YES;
+                    }
+                }
+
+                if (![AspectsConfig sharedAspectsConfig].instanceMethodOnceHook&&![AspectsConfig sharedAspectsConfig].methodOnceHook) {
+                    if ([AspectsConfig sharedAspectsConfig].onceHookClassMethodMap) {
+                        NSSet *onceHookClassMethodMap =[[AspectsConfig sharedAspectsConfig].onceHookClassMethodMap objectForKey:NSStringFromClass(currentClass)];
+                        if ([onceHookClassMethodMap containsObject:selectorName]) {
+                            
+                        }
+                        else{
+                            return YES;
+                        }
+                    }
+                    else{
+                        return YES;
+                    }
                 }
                 NSString *errorDescription = [NSString stringWithFormat:@"Error: %@ already hooked in %@. A method can only be hooked once per class hierarchy.", selectorName, NSStringFromClass(currentClass)];
                 AspectError(AspectErrorSelectorAlreadyHookedInClassHierarchy, errorDescription);
                 return NO;
             }
         } while ((currentClass = class_getSuperclass(currentClass)));
-
+        
         // Add the selector as being modified.
         currentClass = klass;
         AspectTracker *subclassTracker = nil;
@@ -639,10 +797,12 @@ static BOOL aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, Aspec
             } else {
                 [tracker.selectorNames addObject:selectorName];
             }
-
+            
             // All superclasses get marked as having a subclass that is modified.
             subclassTracker = tracker;
         }while ((currentClass = class_getSuperclass(currentClass)));
+        
+        
 	} else {
 		return YES;
 	}

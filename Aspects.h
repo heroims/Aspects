@@ -38,6 +38,30 @@ typedef NS_OPTIONS(NSUInteger, AspectOptions) {
 
 @end
 
+/// Every property can only set one times
+@interface AspectsConfig : NSObject
+
++ (instancetype)sharedAspectsConfig;
+
+@property(nonatomic,strong)NSSet *customClassBlackList;
+@property(nonatomic,strong)NSDictionary *customClassMethodBlackList;
+
+/// key :class string NSString  value:method string NSSet
+///
+/// @{@"UIViewController":[NSSet setWithObjects:@"viewDidAppear:", nil]}
+///
+@property(nonatomic,strong)NSDictionary *onceHookClassMethodMap;
+
+@property(nonatomic,strong)NSDictionary *onceHookWhiteListClassMethodMap;
+
+/// Only run in instance method ,It's like Aspects default.  Default YES
+@property(nonatomic,assign)BOOL instanceMethodOnceHook;
+
+/// methodOnceHook > instanceMethodOnceHook
+@property(nonatomic,assign)BOOL methodOnceHook;
+
+@end
+
 /**
  Aspects uses Objective-C message forwarding to hook into messages. This will create some overhead. Don't add aspects to methods that are called a lot. Aspects is meant for view/controller code that is not called a 1000 times per second.
 
@@ -82,6 +106,8 @@ typedef NS_ENUM(NSUInteger, AspectErrorCode) {
     AspectErrorFailedToAllocateClassPair,             /// The runtime failed creating a class pair.
     AspectErrorMissingBlockSignature,                 /// The block misses compile time signature info and can't be called.
     AspectErrorIncompatibleBlockSignature,            /// The block signature does not match the method or is too large.
+    AspectErrorClassBlacklisted,
+    AspectErrorClassMethodBlacklisted,
 
     AspectErrorRemoveObjectAlreadyDeallocated = 100   /// (for removing) The object hooked is already deallocated.
 };
