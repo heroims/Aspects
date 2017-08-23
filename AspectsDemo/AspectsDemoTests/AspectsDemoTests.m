@@ -175,7 +175,10 @@
 #pragma mark - Generic Hook Tests
 
 - (void)testCALayerExploding {
+#if TARGET_OS_IPHONE
     if ( [[UIDevice currentDevice] systemVersion].floatValue>9) {
+#else
+#endif
         __block BOOL called = NO;
         id globalAspect = [CALayer aspect_hookSelector:@selector(name) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
             NSLog(@"Hello from %@", info.instance);
@@ -189,9 +192,11 @@
         XCTAssertTrue(called, @"Flag needs to be called.");
         
         XCTAssertTrue([globalAspect remove]);
-
+#if TARGET_OS_IPHONE
     }
-    
+#else
+#endif
+  
 }
 
 - (void)testInsteadHook {
