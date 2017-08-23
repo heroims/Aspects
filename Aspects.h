@@ -65,6 +65,8 @@ typedef NS_OPTIONS(NSUInteger, AspectOptions) {
 
 @end
 
+#define AspectsConfigInstance [AspectsConfig sharedAspectsConfig]
+
 /**
  Aspects uses Objective-C message forwarding to hook into messages. This will create some overhead. Don't add aspects to methods that are called a lot. Aspects is meant for view/controller code that is not called a 1000 times per second.
 

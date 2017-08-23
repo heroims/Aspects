@@ -31,7 +31,7 @@
         } error:NULL];
     }
     NSError *error=nil;
-    [AspectsConfig sharedAspectsConfig].unFindMethodToAdd=YES;
+    AspectsConfigInstance.unFindMethodToAdd=YES;
     [aspectsController aspect_hookSelector:NSSelectorFromString(@"aaaa:bbbb:") withOptions:AspectPositionAfter usingBlock:^(id a,...) {
         NSMutableArray *objectsArr=[[NSMutableArray alloc] init];
         if (a)
