@@ -8,7 +8,7 @@ Pod::Spec.new do |s|
   s.ios.deployment_target = '6.0'
   s.osx.deployment_target = '10.7'
   s.watchos.deployment_target = '2.0'
-  s.source       = { :git => "https://github.com/steipete/AspectsPlus.git", :tag => "#{s.version}" }
+  s.source       = { :git => "https://github.com/heroims/AspectsPlus.git", :tag => "#{s.version}" }
   s.source_files  = 'Aspects.{h,m}'
   s.requires_arc = true;
 end
