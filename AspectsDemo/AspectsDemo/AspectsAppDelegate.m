@@ -29,9 +29,10 @@
         [aspectsController aspect_hookSelector:@selector(viewWillLayoutSubviews) withOptions:0 usingBlock:^{
             NSLog(@"Controller is layouting!");
         } error:NULL];
+        AspectsConfigInstance.unFindMethodToAdd=YES;
     }
+
     NSError *error=nil;
-    AspectsConfigInstance.unFindMethodToAdd=YES;
     [aspectsController aspect_hookSelector:NSSelectorFromString(@"aaaa:bbbb:") withOptions:AspectPositionAfter usingBlock:^(id a,...) {
         NSMutableArray *objectsArr=[[NSMutableArray alloc] init];
         if (a)

@@ -2,8 +2,8 @@
 //  AspectsDemoTests.m
 //  AspectsDemoTests
 //
-//  Created by Peter Steinberger on 03/05/14.
-//  Copyright (c) 2014 PSPDFKit GmbH. All rights reserved.
+//  Created by Zhao Yiqi on 2017/8/23.
+//  Copyright © 2017年 PSPDFKit GmbH. All rights reserved.
 //
 
 #import <XCTest/XCTest.h>
@@ -71,52 +71,71 @@
 
 @end
 
-@interface AspectsTests : XCTestCase @end
+@interface AspectsDemoTests : XCTestCase
 
-@implementation AspectsTests
+@end
+
+@implementation AspectsDemoTests
+
+- (void)setUp {
+    [super setUp];
+    // Put setup code here. This method is called before the invocation of each test method in the class.
+}
+
+- (void)tearDown {
+    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    [super tearDown];
+}
+
+- (void)testPerformanceExample {
+    // This is an example of a performance test case.
+    [self measureBlock:^{
+        // Put the code you want to measure the time of here.
+    }];
+}
 
 ///////////////////////////////////////////////////////////////////////////////////////////
 #pragma mark - Test Block Signature
 
 - (void)testMatchingBlockSignature {
     TestClass *testClass = [TestClass new];
-
+    
     __block BOOL called = NO;
     id aspect = [testClass aspect_hookSelector:@selector(testCall) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
         called = YES;
     } error:NULL];
     [testClass testCall];
     XCTAssertTrue(called, @"Flag must have been set.");
-
+    
     TestClass *testClass2 = [TestClass new];
     called = NO;
     [testClass2 testCall];
     XCTAssertFalse(called, @"Flag must have been NOT set.");
-
+    
     XCTAssertTrue([aspect remove], @"Must be able to deregister");
 }
 
 - (void)testMatchingBlockSignature2 {
     TestClass *testClass = [TestClass new];
-
+    
     __block BOOL called = NO;
     id<AspectToken> aspect = [testClass aspect_hookSelector:@selector(testCallAndExecuteBlock:) withOptions:AspectPositionAfter usingBlock:^{
         called = YES;
     } error:NULL];
     [testClass testCallAndExecuteBlock:NULL];
     XCTAssertTrue(called, @"Flag must have been set.");
-
+    
     TestClass *testClass2 = [TestClass new];
     called = NO;
     [testClass2 testCall];
     XCTAssertFalse(called, @"Flag must have been NOT set.");
-
+    
     XCTAssertTrue([aspect remove], @"Must be able to deregister");
 }
 
 - (void)testTooLargeBlockSignature {
     TestClass *testClass = [TestClass new];
-
+    
     NSError *error = nil;
     __block BOOL called = NO;
     id<AspectToken> aspect = [testClass aspect_hookSelector:@selector(testCallAndExecuteBlock:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info, id test, id foo, id bar) {
@@ -126,7 +145,7 @@
     XCTAssertNil(aspect);
     XCTAssertTrue(error.code == AspectErrorIncompatibleBlockSignature);
     XCTAssertFalse(called, @"Flag must have not been set.");
-
+    
     TestClass *testClass2 = [TestClass new];
     called = NO;
     [testClass2 testCall];
@@ -135,7 +154,7 @@
 
 - (void)testMismatchingSignature {
     TestClass *testClass = [TestClass new];
-
+    
     NSError *error = nil;
     __block BOOL called = NO;
     id<AspectToken> aspect = [testClass aspect_hookSelector:@selector(testCallAndExecuteBlock:) withOptions:AspectPositionAfter usingBlock:^(NSUInteger foobar) {
@@ -145,7 +164,7 @@
     XCTAssertNil(aspect);
     XCTAssertTrue(error.code == AspectErrorIncompatibleBlockSignature);
     XCTAssertFalse(called, @"Flag must have not been set.");
-
+    
     TestClass *testClass2 = [TestClass new];
     called = NO;
     [testClass2 testCall];
@@ -156,19 +175,23 @@
 #pragma mark - Generic Hook Tests
 
 - (void)testCALayerExploding {
-    __block BOOL called = NO;
-    id globalAspect = [CALayer aspect_hookSelector:@selector(name) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
-        NSLog(@"Hello from %@", info.instance);
-        called = YES;
-    } error:NULL];
+    if ( [[UIDevice currentDevice] systemVersion].floatValue>9) {
+        __block BOOL called = NO;
+        id globalAspect = [CALayer aspect_hookSelector:@selector(name) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
+            NSLog(@"Hello from %@", info.instance);
+            called = YES;
+        } error:NULL];
+        
+        // We had some branches where this blew up already.
+        CALayer *test = [CALayer new];
+        XCTAssertNotNil(test);
+        [test name];
+        XCTAssertTrue(called, @"Flag needs to be called.");
+        
+        XCTAssertTrue([globalAspect remove]);
 
-    // We had some branches where this blew up already.
-    CALayer *test = [CALayer new];
-    XCTAssertNotNil(test);
-    [test name];
-    XCTAssertTrue(called, @"Flag needs to be called.");
-
-    XCTAssertTrue([globalAspect remove]);
+    }
+    
 }
 
 - (void)testInsteadHook {
@@ -181,7 +204,7 @@
         [[info originalInvocation] setReturnValue:&customText];
     } error:NULL];
     XCTAssertEqualObjects(testObject.name, @"Custom Text", @"Must match");
-
+    
     // Test second object, and ensure that this doesn't change the override of the first object.
     CALayer *testObject2 = [CALayer new];
     testObject2.name = @"Default text2";
@@ -191,51 +214,51 @@
         [[info originalInvocation] setReturnValue:&customText];
     } error:NULL];
     XCTAssertEqualObjects(testObject2.name, @"Custom Text2", @"Must match");
-
+    
     // Globally override.
     id globalAspect = [CALayer aspect_hookSelector:@selector(name) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
         NSString *customText = @"Global";
         [[info originalInvocation] setReturnValue:&customText];
     } error:NULL];
     XCTAssertEqualObjects(testObject2.name, @"Global", @"Must match");
-
+    
     CALayer *testObject3 = [CALayer new];
     XCTAssertEqualObjects(testObject3.name, @"Global", @"Must match");
     testObject3.name = @"Test";
     XCTAssertEqualObjects(testObject3.name, @"Global", @"Must match");
     XCTAssertTrue([globalAspect remove], @"Must work");
     XCTAssertEqualObjects(testObject3.name, @"Test", @"Must match");
-
+    
     // Test that removing an aspect returns the original.
     XCTAssertEqualObjects(testObject.name, @"Custom Text", @"Must match");
     XCTAssertTrue([aspect remove], @"Must return YES");
     XCTAssertEqualObjects(testObject.name, @"Default text", @"Must match");
     XCTAssertFalse([aspect remove], @"Must return NO");
-
+    
     XCTAssertTrue([aspect2 remove], @"Must be able to deregister");
 }
 
 - (void)testAspectsCalledPerObject {
     TestClass *testClass = [TestClass new];
-
+    
     __block BOOL called = NO;
     id aspect = [testClass aspect_hookSelector:@selector(testCall) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
         called = YES;
     } error:NULL];
     [testClass testCall];
     XCTAssertTrue(called, @"Flag must have been set.");
-
+    
     TestClass *testClass2 = [TestClass new];
     called = NO;
     [testClass2 testCall];
     XCTAssertFalse(called, @"Flag must have been NOT set.");
-
+    
     XCTAssertTrue([aspect remove], @"Must be able to deregister");
 }
 
 - (void)testExecutionOrderAndMultipleRegistation {
     TestClass *testClass = [TestClass new];
-
+    
     __block BOOL called_before = NO;
     __block BOOL called_after  = NO;
     __block BOOL called_after2 = NO;
@@ -253,11 +276,11 @@
         XCTAssertFalse(called_after, @"Flag must have not been set.");
         XCTAssertFalse(called_after2, @"Flag must have not been set.");
     }];
-
+    
     XCTAssertTrue(called_before, @"Flag must have been set.");
     XCTAssertTrue(called_after, @"Flag must have been set.");
     XCTAssertTrue(called_after2, @"Flag must have been set.");
-
+    
     XCTAssertTrue([aspect_after remove], @"Must be able to deregister");
     XCTAssertTrue([aspect_before remove], @"Must be able to deregister");
     XCTAssertTrue([aspect_after2 remove], @"Must be able to deregister");
@@ -269,12 +292,12 @@
 - (void)testExample {
     TestClass *testClass = [TestClass new];
     TestClass *testClass2 = [TestClass new];
-
+    
     __block BOOL testCallCalled = NO;
     id aspectToken = [testClass aspect_hookSelector:@selector(testCall) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
         testCallCalled = YES;
     } error:NULL];
-
+    
     [testClass2 testCallAndExecuteBlock:^{
         [testClass testCall];
     }];
@@ -287,7 +310,7 @@
     CGRect rect = [testClass testThatReturnsAStruct];
     id aspect = [testClass aspect_hookSelector:@selector(testThatReturnsAStruct) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
     } error:NULL];
-
+    
     CGRect rectHooked = [testClass testThatReturnsAStruct];
     XCTAssertTrue(CGRectEqualToRect(rect, rectHooked), @"Must be equal");
     XCTAssertTrue([aspect remove], @"Must be able to deregister");
@@ -301,7 +324,7 @@
         testCallCalled = YES;
     } error:NULL];
     double d2 = [testClass callReturnsDouble];
-
+    
     XCTAssertEqual(d1, d2, @"Must be equal");
     XCTAssertTrue(testCallCalled, @"Must call hook");
     XCTAssertTrue([aspect remove], @"Must be able to deregister");
@@ -332,7 +355,7 @@
         testCallCalled = YES;
     } error:NULL];
     long long d2 = [testClass callReturnsLongLong];
-
+    
     XCTAssertEqual(d1, d2, @"Must be equal");
     XCTAssertTrue(testCallCalled, @"Must call hook");
     XCTAssertTrue([aspect remove], @"Must be able to deregister");
@@ -340,13 +363,13 @@
 
 - (void)testHookReleaseIsNotAllowed {
     TestClass *testClass = [TestClass new];
-
+    
     __block BOOL testCallCalled = NO;
     id aspectToken = [testClass aspect_hookSelector:NSSelectorFromString(@"release") withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
         testCallCalled = YES;
     } error:NULL];
     XCTAssertNil(aspectToken, @"Token must be nil");
-
+    
     [testClass testCall];
     XCTAssertFalse(testCallCalled, @"Release should not be hookable");
 }
@@ -357,14 +380,14 @@
 // Hooking for deallic is delicate, but should work for AspectPositionBefore and AspectPositionAfter.
 - (void)testDeallocHooking {
     TestClass *testClass = [TestClass new];
-
+    
     __block BOOL testCallCalled = NO;
     __block id aspectToken = [testClass aspect_hookSelector:NSSelectorFromString(@"dealloc") withOptions:AspectPositionBefore usingBlock:^(id<AspectInfo> info) {
         testCallCalled = YES;
         NSLog(@"called from dealloc");
     } error:NULL];
     XCTAssertNotNil(aspectToken, @"Must return a token.");
-
+    
     testClass = nil;
     XCTAssertTrue(testCallCalled, @"Dealloc-hook must work.");
 }
@@ -372,7 +395,7 @@
 // Replacing dealloc should not work.
 - (void)testDeallocReplacing {
     TestClass *testClass = [TestClass new];
-
+    
     NSError *error;
     __block BOOL deallocCalled = NO;
     id aspectToken = [testClass aspect_hookSelector:NSSelectorFromString(@"dealloc") withOptions:AspectPositionInstead usingBlock:^(id<AspectInfo> info) {
@@ -381,7 +404,7 @@
     } error:&error];
     XCTAssertNil(aspectToken, @"Must NOT return a token.");
     XCTAssertEqual(error.code, AspectErrorSelectorDeallocPosition, @"Error must be correct");
-
+    
     testClass = nil;
     XCTAssertFalse(deallocCalled, @"Dealloc-hook must not work.");
 }
@@ -408,25 +431,25 @@
 
 - (void)testInstanceTokenDeregistration {
     TestClass *testClass = [TestClass new];
-
+    
     __block BOOL testCallCalled = NO;
     id aspectToken = [testClass aspect_hookSelector:@selector(testCall) withOptions:AspectPositionInstead usingBlock:^(id<AspectInfo> info) {
         testCallCalled = YES;
     } error:NULL];
     XCTAssertNotNil(aspectToken, @"Must return a token.");
-
+    
     [testClass testCall];
     XCTAssertTrue(testCallCalled, @"Hook must work.");
-
+    
     XCTAssertNotEqualObjects(testClass.class, object_getClass(testClass), @"Object must have a custom subclass.");
-
+    
     XCTAssertTrue([aspectToken remove], @"Deregistration must work");
     XCTAssertEqualObjects(testClass.class, object_getClass(testClass), @"Object must not have a custom subclass.");
-
+    
     testCallCalled = NO;
     [testClass testCall];
     XCTAssertFalse(testCallCalled, @"Hook must no longer work.");
-
+    
     XCTAssertFalse([aspectToken remove], @"Deregistration must not work twice");
 }
 
@@ -434,99 +457,99 @@
     TestWithCustomForwardInvocation *testClass = [TestWithCustomForwardInvocation new];
     Method originalForwardInvocationMethod = class_getInstanceMethod(testClass.class, @selector(forwardInvocation:));
     IMP originalForwardInvocationIMP = method_getImplementation(originalForwardInvocationMethod);
-
+    
     // Test that forwardInvocation points to NSObject.
     {
         Method objectMethod = class_getInstanceMethod(TestWithCustomForwardInvocation.class, @selector(forwardInvocation:));
         XCTAssertEqual(method_getImplementation(originalForwardInvocationMethod), method_getImplementation(objectMethod), @"Implementations must be equal");
     }
-
+    
     __block BOOL testCalled = NO;
     id token = [TestWithCustomForwardInvocation aspect_hookSelector:@selector(test) withOptions:AspectPositionInstead usingBlock:^(id<AspectInfo> info) {
         testCalled = YES;
     } error:NULL];
     XCTAssertNotNil(token, @"Must return a token.");
-
+    
     [testClass test];
     XCTAssertTrue(testCalled, @"Hook must work.");
-
+    
     XCTAssertEqualObjects(testClass.class, object_getClass(testClass), @"Object must not have a custom subclass.");
-
+    
     // Test that forwardInvocation points to our own implementation.
     {
         Method forwardInvocationMethod = class_getInstanceMethod(testClass.class, @selector(forwardInvocation:));
         XCTAssertNotEqual(method_getImplementation(forwardInvocationMethod), originalForwardInvocationIMP, @"Implementations must not be equal");
     }
-
+    
     XCTAssertTrue([token remove], @"Deregistration must work");
-
+    
     // Test that forwardInvocation (again) points to NSObject and thus is correctly restored.
     {
         Method forwardInvocationMethod = class_getInstanceMethod(testClass.class, @selector(forwardInvocation:));
         XCTAssertEqual(method_getImplementation(forwardInvocationMethod), originalForwardInvocationIMP, @"Implementations must be equal");
     }
-
+    
     testCalled = NO;
     [testClass test];
     XCTAssertFalse(testCalled, @"Hook must no longer work.");
-
+    
     XCTAssertFalse([token remove], @"Deregistration must not work twice");
 }
 
 - (void)testGlobalTokenDeregistration {
     TestClass *testClass = [TestClass new];
-
+    
     // Test that forwardInvocation points to NSObject.
     {
         Method forwardInvocationMethod = class_getInstanceMethod(testClass.class, @selector(forwardInvocation:));
         Method objectMethod = class_getInstanceMethod(NSObject.class, @selector(forwardInvocation:));
         XCTAssertEqual(method_getImplementation(forwardInvocationMethod), method_getImplementation(objectMethod), @"Implementations must be equal");
     }
-
+    
     __block BOOL testCallCalled = NO;
     id token = [TestClass aspect_hookSelector:@selector(testCall) withOptions:AspectPositionInstead usingBlock:^(id<AspectInfo> info) {
         testCallCalled = YES;
     } error:NULL];
     XCTAssertNotNil(token, @"Must return a token.");
-
+    
     [testClass testCall];
     XCTAssertTrue(testCallCalled, @"Hook must work.");
-
+    
     XCTAssertEqualObjects(testClass.class, object_getClass(testClass), @"Object must not have a custom subclass.");
-
+    
     // Test that forwardInvocation points to our own implementation.
     {
         Method forwardInvocationMethod = class_getInstanceMethod(testClass.class, @selector(forwardInvocation:));
         Method objectMethod = class_getInstanceMethod(NSObject.class, @selector(forwardInvocation:));
         XCTAssertNotEqual(method_getImplementation(forwardInvocationMethod), method_getImplementation(objectMethod), @"Implementations must not be equal");
     }
-
+    
     XCTAssertTrue([token remove], @"Deregistration must work");
-
+    
     // Test that forwardInvocation (again) points to NSObject and thus is correctly restored.
     {
         Method forwardInvocationMethod = class_getInstanceMethod(testClass.class, @selector(forwardInvocation:));
         Method objectMethod = class_getInstanceMethod(NSObject.class, @selector(forwardInvocation:));
         XCTAssertEqual(method_getImplementation(forwardInvocationMethod), method_getImplementation(objectMethod), @"Implementations must be equal");
     }
-
+    
     testCallCalled = NO;
     [testClass testCall];
     XCTAssertFalse(testCallCalled, @"Hook must no longer work.");
-
+    
     XCTAssertFalse([token remove], @"Deregistration must not work twice");
 }
 
 - (void)testSimpleDeregistration {
     TestClass *testClass = [TestClass new];
-
+    
     __block BOOL called = NO;
     id aspectToken = [TestClass aspect_hookSelector:@selector(testCall) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info) {
         called = YES;
     } error:NULL];
     [testClass testCall];
     XCTAssertTrue(called, @"Flag must have been set.");
-
+    
     called = NO;
     XCTAssertTrue([aspectToken remove], @"Must allow deregistration");
     [testClass testCall];
@@ -535,19 +558,19 @@
 
 - (void)testAutoDeregistration {
     TestClass *testClass = [TestClass new];
-
+    
     __block BOOL testCallCalled = NO;
     id aspectToken = [testClass aspect_hookSelector:@selector(testCall) withOptions:AspectPositionAfter|AspectOptionAutomaticRemoval usingBlock:^(id<AspectInfo> info) {
         testCallCalled = YES;
     } error:NULL];
-
+    
     [testClass testCall];
     XCTAssertTrue(testCallCalled, @"Must be set to YES");
-
+    
     testCallCalled = NO;
     [testClass testCall];
     XCTAssertFalse(testCallCalled, @"Must be set to NO");
-
+    
     XCTAssertFalse([aspectToken remove], @"Must not able to deregister again");
 }
 
@@ -556,14 +579,14 @@
 
 - (void)testKVOCoexistance {
     TestClass *testClass = [TestClass new];
-
+    
     __block BOOL hookCalled = NO;
     id aspectToken = [testClass aspect_hookSelector:@selector(setString:) withOptions:AspectPositionAfter usingBlock:^(id<AspectInfo> info, NSString *string) {
         NSLog(@"Aspect hook!");
         hookCalled = YES;
     } error:NULL];
     [testClass addObserver:self forKeyPath:NSStringFromSelector(@selector(string)) options:0 context:_cmd];
-
+    
     XCTAssertFalse(testClass.kvoTestCalled, @"KVO must be not set");
     testClass.string = @"test";
     XCTAssertTrue(hookCalled, @"Hook must be called");
@@ -574,7 +597,7 @@
     testClass.string = @"test2";
     XCTAssertTrue(hookCalled, @"Hook must be called");
     XCTAssertFalse(testClass.kvoTestCalled, @"KVO must no longer work");
-
+    
     XCTAssertTrue([aspectToken remove], @"Must be able to deregister");
 }
 
@@ -629,7 +652,7 @@
     [testClass performSelector:NSSelectorFromString(@"non_existing_selector")];
 #pragma clang diagnostic pop
     XCTAssertTrue(testClass.forwardInvocationCalled, @"Must have called custom forwardInvocation:");
-
+    
     XCTAssertTrue([aspectToken remove], @"Must be able to deregister");
 }
 
@@ -701,65 +724,66 @@
     __block BOOL A_aspect_called = NO;
     __block BOOL B_aspect_called = NO;
     __block BOOL C_aspect_called = NO;
-
+    
     id aspectToken1 = [A aspect_hookSelector:@selector(foo) withOptions:AspectPositionBefore usingBlock:^(id<AspectInfo> info) {
         NSLog(@"before -[A foo]");
         A_aspect_called = YES;
     } error:NULL];
     XCTAssertNotNil(aspectToken1, @"Must return a token");
-
+    
     id aspectToken2 = [B aspect_hookSelector:@selector(foo) withOptions:AspectPositionBefore usingBlock:^(id<AspectInfo> info) {
         NSLog(@"before -[B foo]");
         B_aspect_called = YES;
     } error:NULL];
     XCTAssertNil(aspectToken2, @"Must not return a token");
-
+    
     // a sibling and it's subclasses should be able to hook the same selector
     id aspectToken3 = [C aspect_hookSelector:@selector(foo) withOptions:AspectPositionBefore usingBlock:^(id<AspectInfo> info) {
         NSLog(@"before -[C foo]");
         C_aspect_called = YES;
     } error:NULL];
     XCTAssertNotNil(aspectToken3, @"Must return a token");
-
+    
     B *b = [B new];
     [b foo];
-
+    
     // TODO: A is not yet called, we can't detect the target IMP for an invocation.
     XCTAssertTrue(A_aspect_called, @"A aspect should be called");
     XCTAssertFalse(B_aspect_called, @"B aspect should not be called");
     XCTAssertFalse(C_aspect_called, @"C aspect should not be called");
-
+    
     C *c = [C new];
     [c foo];
     XCTAssertTrue(C_aspect_called, @"C aspect should be called");
-
+    
     XCTAssertTrue([aspectToken1 remove], @"Must be able to deregister");
     XCTAssertTrue([aspectToken3 remove], @"Must be able to deregister");
 }
 - (void)testSelectorMangling3 {
     __block BOOL A_aspect_called = NO;
     __block BOOL B_aspect_called = NO;
-
+    
     id aspectToken1 = [B aspect_hookSelector:@selector(bar) withOptions:AspectPositionBefore usingBlock:^(id<AspectInfo> info) {
         NSLog(@"before -[B bar]");
         B_aspect_called = YES;
     } error:NULL];
     XCTAssertNotNil(aspectToken1, @"Must return a token");
-
+    
     // if a subclass already hooks this selector we shouldn't be able to hook it in a superclass
     id aspectToken2 = [A aspect_hookSelector:@selector(bar) withOptions:AspectPositionBefore usingBlock:^(id<AspectInfo> info) {
         NSLog(@"before -[A bar]");
         A_aspect_called = YES;
     } error:NULL];
     XCTAssertNil(aspectToken2, @"Must not return a token");
-
+    
     B *b = [B new];
     [b bar];
-
+    
     XCTAssertFalse(A_aspect_called, @"A aspect should not be called");
     XCTAssertTrue(B_aspect_called, @"B aspect should be called");
-
+    
     XCTAssertTrue([aspectToken1 remove], @"Must be able to deregister");
 }
 
 @end
+

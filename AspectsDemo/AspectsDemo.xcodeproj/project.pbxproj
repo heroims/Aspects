@@ -14,18 +14,14 @@
 		78573F0119155A2E000D3B00 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 78573F0019155A2E000D3B00 /* main.m */; };
 		78573F0519155A2E000D3B00 /* AspectsAppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 78573F0419155A2E000D3B00 /* AspectsAppDelegate.m */; };
 		78573F0719155A2E000D3B00 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 78573F0619155A2E000D3B00 /* Images.xcassets */; };
-		78573F0E19155A2E000D3B00 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78573F0D19155A2E000D3B00 /* XCTest.framework */; };
-		78573F0F19155A2E000D3B00 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78573EF419155A2E000D3B00 /* Foundation.framework */; };
-		78573F1019155A2E000D3B00 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 78573EF819155A2E000D3B00 /* UIKit.framework */; };
-		78573F1819155A2E000D3B00 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 78573F1619155A2E000D3B00 /* InfoPlist.strings */; };
-		78573F1A19155A2E000D3B00 /* AspectsDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 78573F1919155A2E000D3B00 /* AspectsDemoTests.m */; };
 		78573F2519155A74000D3B00 /* Aspects.m in Sources */ = {isa = PBXBuildFile; fileRef = 78573F2319155A74000D3B00 /* Aspects.m */; };
 		78D7D77119177C8E002EB314 /* AspectsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 78D7D76F19177C8E002EB314 /* AspectsViewController.m */; };
 		78D7D77219177C8E002EB314 /* AspectsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 78D7D77019177C8E002EB314 /* AspectsViewController.xib */; };
+		D87A350D1F4DCDAC005FC485 /* AspectsDemoTests.m in Sources */ = {isa = PBXBuildFile; fileRef = D87A350C1F4DCDAC005FC485 /* AspectsDemoTests.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		78573F1119155A2E000D3B00 /* PBXContainerItemProxy */ = {
+		D87A350F1F4DCDAC005FC485 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 78573EE919155A2E000D3B00 /* Project object */;
 			proxyType = 1;
@@ -46,16 +42,15 @@
 		78573F0319155A2E000D3B00 /* AspectsAppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AspectsAppDelegate.h; sourceTree = "<group>"; };
 		78573F0419155A2E000D3B00 /* AspectsAppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AspectsAppDelegate.m; sourceTree = "<group>"; };
 		78573F0619155A2E000D3B00 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		78573F0C19155A2E000D3B00 /* AspectsDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AspectsDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		78573F0D19155A2E000D3B00 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
-		78573F1519155A2E000D3B00 /* AspectsDemoTests-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "AspectsDemoTests-Info.plist"; sourceTree = "<group>"; };
-		78573F1719155A2E000D3B00 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		78573F1919155A2E000D3B00 /* AspectsDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AspectsDemoTests.m; sourceTree = "<group>"; };
 		78573F2319155A74000D3B00 /* Aspects.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Aspects.m; path = ../../Aspects.m; sourceTree = "<group>"; };
 		78573F2419155A74000D3B00 /* Aspects.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Aspects.h; path = ../../Aspects.h; sourceTree = "<group>"; };
 		78D7D76E19177C8E002EB314 /* AspectsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AspectsViewController.h; sourceTree = "<group>"; };
 		78D7D76F19177C8E002EB314 /* AspectsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AspectsViewController.m; sourceTree = "<group>"; };
 		78D7D77019177C8E002EB314 /* AspectsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AspectsViewController.xib; sourceTree = "<group>"; };
+		D87A350A1F4DCDAC005FC485 /* AspectsDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AspectsDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		D87A350C1F4DCDAC005FC485 /* AspectsDemoTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AspectsDemoTests.m; sourceTree = "<group>"; };
+		D87A350E1F4DCDAC005FC485 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,13 +64,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		78573F0919155A2E000D3B00 /* Frameworks */ = {
+		D87A35071F4DCDAC005FC485 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78573F0E19155A2E000D3B00 /* XCTest.framework in Frameworks */,
-				78573F1019155A2E000D3B00 /* UIKit.framework in Frameworks */,
-				78573F0F19155A2E000D3B00 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -86,7 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				78573EFA19155A2E000D3B00 /* AspectsDemo */,
-				78573F1319155A2E000D3B00 /* AspectsDemoTests */,
+				D87A350B1F4DCDAC005FC485 /* AspectsDemoTests */,
 				78573EF319155A2E000D3B00 /* Frameworks */,
 				78573EF219155A2E000D3B00 /* Products */,
 			);
@@ -96,7 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				78573EF119155A2E000D3B00 /* AspectsDemo.app */,
-				78573F0C19155A2E000D3B00 /* AspectsDemoTests.xctest */,
+				D87A350A1F4DCDAC005FC485 /* AspectsDemoTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -139,22 +131,13 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		78573F1319155A2E000D3B00 /* AspectsDemoTests */ = {
+		D87A350B1F4DCDAC005FC485 /* AspectsDemoTests */ = {
 			isa = PBXGroup;
 			children = (
-				78573F1919155A2E000D3B00 /* AspectsDemoTests.m */,
-				78573F1419155A2E000D3B00 /* Supporting Files */,
+				D87A350C1F4DCDAC005FC485 /* AspectsDemoTests.m */,
+				D87A350E1F4DCDAC005FC485 /* Info.plist */,
 			);
 			path = AspectsDemoTests;
-			sourceTree = "<group>";
-		};
-		78573F1419155A2E000D3B00 /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				78573F1519155A2E000D3B00 /* AspectsDemoTests-Info.plist */,
-				78573F1619155A2E000D3B00 /* InfoPlist.strings */,
-			);
-			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -177,22 +160,22 @@
 			productReference = 78573EF119155A2E000D3B00 /* AspectsDemo.app */;
 			productType = "com.apple.product-type.application";
 		};
-		78573F0B19155A2E000D3B00 /* AspectsDemoTests */ = {
+		D87A35091F4DCDAC005FC485 /* AspectsDemoTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 78573F2019155A2E000D3B00 /* Build configuration list for PBXNativeTarget "AspectsDemoTests" */;
+			buildConfigurationList = D87A35111F4DCDAC005FC485 /* Build configuration list for PBXNativeTarget "AspectsDemoTests" */;
 			buildPhases = (
-				78573F0819155A2E000D3B00 /* Sources */,
-				78573F0919155A2E000D3B00 /* Frameworks */,
-				78573F0A19155A2E000D3B00 /* Resources */,
+				D87A35061F4DCDAC005FC485 /* Sources */,
+				D87A35071F4DCDAC005FC485 /* Frameworks */,
+				D87A35081F4DCDAC005FC485 /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
-				78573F1219155A2E000D3B00 /* PBXTargetDependency */,
+				D87A35101F4DCDAC005FC485 /* PBXTargetDependency */,
 			);
 			name = AspectsDemoTests;
 			productName = AspectsDemoTests;
-			productReference = 78573F0C19155A2E000D3B00 /* AspectsDemoTests.xctest */;
+			productReference = D87A350A1F4DCDAC005FC485 /* AspectsDemoTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
 /* End PBXNativeTarget section */
@@ -205,7 +188,10 @@
 				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = "PSPDFKit GmbH";
 				TargetAttributes = {
-					78573F0B19155A2E000D3B00 = {
+					D87A35091F4DCDAC005FC485 = {
+						CreatedOnToolsVersion = 8.3.3;
+						DevelopmentTeam = YDDJ83LVSQ;
+						ProvisioningStyle = Automatic;
 						TestTargetID = 78573EF019155A2E000D3B00;
 					};
 				};
@@ -223,7 +209,7 @@
 			projectRoot = "";
 			targets = (
 				78573EF019155A2E000D3B00 /* AspectsDemo */,
-				78573F0B19155A2E000D3B00 /* AspectsDemoTests */,
+				D87A35091F4DCDAC005FC485 /* AspectsDemoTests */,
 			);
 		};
 /* End PBXProject section */
@@ -239,11 +225,10 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		78573F0A19155A2E000D3B00 /* Resources */ = {
+		D87A35081F4DCDAC005FC485 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78573F1819155A2E000D3B00 /* InfoPlist.strings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -261,21 +246,21 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		78573F0819155A2E000D3B00 /* Sources */ = {
+		D87A35061F4DCDAC005FC485 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				78573F1A19155A2E000D3B00 /* AspectsDemoTests.m in Sources */,
+				D87A350D1F4DCDAC005FC485 /* AspectsDemoTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		78573F1219155A2E000D3B00 /* PBXTargetDependency */ = {
+		D87A35101F4DCDAC005FC485 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 78573EF019155A2E000D3B00 /* AspectsDemo */;
-			targetProxy = 78573F1119155A2E000D3B00 /* PBXContainerItemProxy */;
+			targetProxy = D87A350F1F4DCDAC005FC485 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -284,14 +269,6 @@
 			isa = PBXVariantGroup;
 			children = (
 				78573EFE19155A2E000D3B00 /* en */,
-			);
-			name = InfoPlist.strings;
-			sourceTree = "<group>";
-		};
-		78573F1619155A2E000D3B00 /* InfoPlist.strings */ = {
-			isa = PBXVariantGroup;
-			children = (
-				78573F1719155A2E000D3B00 /* en */,
 			);
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
@@ -431,43 +408,53 @@
 			};
 			name = Release;
 		};
-		78573F2119155A2E000D3B00 /* Debug */ = {
+		D87A35121F4DCDAC005FC485 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/AspectsDemo.app/AspectsDemo";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AspectsDemo/AspectsDemo-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"DEBUG=1",
-					"$(inherited)",
-				);
-				INFOPLIST_FILE = "AspectsDemoTests/AspectsDemoTests-Info.plist";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = YDDJ83LVSQ;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = AspectsDemoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zyq.bterpro.iMessage.AspectsDemoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AspectsDemo.app/AspectsDemo";
 			};
 			name = Debug;
 		};
-		78573F2219155A2E000D3B00 /* Release */ = {
+		D87A35131F4DCDAC005FC485 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(BUILT_PRODUCTS_DIR)/AspectsDemo.app/AspectsDemo";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(SDKROOT)/Developer/Library/Frameworks",
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "AspectsDemo/AspectsDemo-Prefix.pch";
-				INFOPLIST_FILE = "AspectsDemoTests/AspectsDemoTests-Info.plist";
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = YDDJ83LVSQ;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				INFOPLIST_FILE = AspectsDemoTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.3;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_BUNDLE_IDENTIFIER = com.zyq.bterpro.iMessage.AspectsDemoTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				TEST_HOST = "$(BUNDLE_LOADER)";
-				WRAPPER_EXTENSION = xctest;
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/AspectsDemo.app/AspectsDemo";
 			};
 			name = Release;
 		};
@@ -492,14 +479,13 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		78573F2019155A2E000D3B00 /* Build configuration list for PBXNativeTarget "AspectsDemoTests" */ = {
+		D87A35111F4DCDAC005FC485 /* Build configuration list for PBXNativeTarget "AspectsDemoTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				78573F2119155A2E000D3B00 /* Debug */,
-				78573F2219155A2E000D3B00 /* Release */,
+				D87A35121F4DCDAC005FC485 /* Debug */,
+				D87A35131F4DCDAC005FC485 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

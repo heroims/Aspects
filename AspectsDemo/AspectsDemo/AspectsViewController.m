@@ -16,8 +16,10 @@
 
 -(void)viewDidLoad{
     [super viewDidLoad];
-    [self aaaa:@"sss" bbbb:@"fff"];
-    [self performSelector:@selector(cccc:) withObject:@"mmm"];
+    if (!NSClassFromString(@"XCTestCase")) {
+        [self aaaa:@"sss" bbbb:@"fff"];
+        [self performSelector:@selector(cccc:) withObject:@"mmm"];
+    }
 }
 
 - (IBAction)buttonPressed:(id)sender {
