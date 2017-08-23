@@ -3,7 +3,7 @@ AspectsPlus  ![](http://cocoapod-badges.herokuapp.com/v/AspectsPlus/badge.png) 
 
 AspectsPlus is a new implementation based on [Aspects](https://github.com/steipete/Aspects).
 
-I add the AspectsConfig to Aspects.
+I add the `AspectsConfig` to [Aspects](https://github.com/steipete/Aspects).
 
 ``` objc
 @interface AspectsConfig : NSObject
