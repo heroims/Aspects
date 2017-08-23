@@ -1,11 +1,45 @@
-Aspects v1.4.2 [![Build Status](https://travis-ci.org/steipete/Aspects.svg?branch=master)](https://travis-ci.org/steipete/Aspects) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+AspectsPlus  ![](http://cocoapod-badges.herokuapp.com/v/AspectsPlus/badge.png) ![](http://cocoapod-badges.herokuapp.com/p/AspectsPlus/badge.png) [![Build Status](https://travis-ci.org/heroims/AspectsPlus.svg?branch=master)](https://travis-ci.org/heroims/AspectsPlus) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 ==============
 
-A delightful, simple library for aspect oriented programming by [@steipete](http://twitter.com/steipete).
+AspectsPlus is a new implementation based on [Aspects](https://github.com/steipete/Aspects).
 
-**Think of Aspects as method swizzling on steroids. It allows you to add code to existing methods per class or per instance**, whilst thinking of the insertion point e.g. before/instead/after. Aspects automatically deals with calling super and is easier to use than regular method swizzling.
+add AspectsConfig
 
-This is stable and used in hundreds of apps since it's part of [PSPDFKit, an iOS PDF framework that ships with apps like Dropbox or Evernote](http://pspdfkit.com), and now I finally made it open source.
+``` objc
+@interface AspectsConfig : NSObject
+
++ (instancetype)sharedAspectsConfig;
+
+@property(nonatomic,strong)NSSet *customClassBlackList;
+@property(nonatomic,strong)NSDictionary *customClassMethodBlackList;
+
+/// key :class string NSString  value:method string NSSet
+///
+/// @{@"UIViewController":[NSSet setWithObjects:@"viewDidAppear:", nil]}
+///
+@property(nonatomic,strong)NSDictionary *onceHookClassMethodMap;
+
+@property(nonatomic,strong)NSDictionary *onceHookWhiteListClassMethodMap;
+
+/// Only run in instance method ,It's like Aspects default.  Default YES
+@property(nonatomic,assign)BOOL instanceMethodOnceHook;
+
+/// methodOnceHook > instanceMethodOnceHook
+@property(nonatomic,assign)BOOL methodOnceHook;
+
+/// if you want use unFindMethodToAdd,must be the block like ^(id instance,id argument1,id argument2,...){} or ^(id instance,...){}
+@property(nonatomic,assign)BOOL unFindMethodToAdd;
+
+@end
+```
+### Usage
+```
+AspectsConfigInstance.unFindMethodToAdd=YES;
+AspectsConfigInstance.methodOnceHook=NO;
+AspectsConfigInstance.instanceMethodOnceHook=NO;
+
+```
+
 
 Aspects extends `NSObject` with the following methods:
 
@@ -183,51 +217,8 @@ MIT licensed, Copyright (c) 2014 Peter Steinberger, steipete@gmail.com, [@steipe
 Release Notes
 -----------------
 
-Version 1.4.2
+Version 1.0
 
 - Allow to hook different subclasses.
 - Smaller tweaks.
 
-Version 1.4.1
-
-- Rename error codes.
-
-Version 1.4.0
-
-- Add support for block signatures that match method signatures. (thanks to @nickynick)
-
-Version 1.3.1
-
-- Add support for OS X 10.7 or higher. (thanks to @ashfurrow)
-
-Version 1.3.0
-
-- Add automatic deregistration.
-- Checks if the selector exists before trying to hook.
-- Improved dealloc hooking. (no more unsafe_unretained needed)
-- Better examples.
-- Always log errors.
-
-Version 1.2.0
-
-- Adds error parameter.
-- Improvements in subclassing registration tracking.
-
-Version 1.1.0
-
-- Renamed the files from NSObject+Aspects.m/h to just Aspects.m/h.
-- Removing now works via calling `remove` on the aspect token.
-- Allow hooking dealloc.
-- Fixes infinite loop if the same method is hooked for multiple classes. Hooking will only work for one class in the hierarchy.
-- Additional checks to prevent things like hooking retain/release/autorelease or forwardInvocation:
-- The original implementation of forwardInvocation is now correctly preserved.
-- Classes are properly cleaned up and restored to the original state after the last hook is deregistered.
-- Lots and lots of new test cases!
-
-Version 1.0.1
-
-- Minor tweaks and documentation improvements.
-
-Version 1.0.0
-
-- Initial release
