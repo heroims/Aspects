@@ -60,6 +60,9 @@ typedef NS_OPTIONS(NSUInteger, AspectOptions) {
 /// methodOnceHook > instanceMethodOnceHook
 @property(nonatomic,assign)BOOL methodOnceHook;
 
+/// if you want use unFindMethodToAdd,must be the block like ^(id instance,id argument1,id argument2,...){} or ^(id instance,...){}
+@property(nonatomic,assign)BOOL unFindMethodToAdd;
+
 @end
 
 /**

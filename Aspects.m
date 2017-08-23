@@ -92,6 +92,7 @@ typedef struct _AspectBlock {
     NSDictionary *_onceHookWhiteListClassMethodMap;
     NSNumber *_instanceMethodOnceHook;
     NSNumber *_methodOnceHook;
+    NSNumber *_unFindMethodToAdd;
 }
 
 +(instancetype)sharedAspectsConfig{
@@ -170,6 +171,20 @@ typedef struct _AspectBlock {
     return NO;
 }
 
+-(void)setUnFindMethodToAdd:(BOOL)unFindMethodToAdd{
+    if (!_unFindMethodToAdd) {
+        _unFindMethodToAdd=[NSNumber numberWithBool:unFindMethodToAdd];
+    }
+
+}
+
+-(BOOL)unFindMethodToAdd{
+    if (_unFindMethodToAdd) {
+        return [_unFindMethodToAdd boolValue];
+    }
+    return NO;
+}
+
 @end
 
 #define AspectPositionFilter 0x07
@@ -219,7 +234,7 @@ static id aspect_add(id self, SEL selector, AspectOptions options, id block, NSE
 
     __block AspectIdentifier *identifier = nil;
     aspect_performLocked(^{
-        if (aspect_isSelectorAllowedAndTrack(self, selector, options, error)) {
+        if (aspect_isSelectorAllowedAndTrack(self, selector, options, block, error)) {
             AspectsContainer *aspectContainer = aspect_getContainerForObject(self, selector);
             identifier = [AspectIdentifier identifierWithSelector:selector object:self options:options block:block error:error];
             if (identifier) {
@@ -659,7 +674,7 @@ static NSMutableDictionary *aspect_getSwizzledClassesDict() {
     return swizzledClassesDict;
 }
 
-static BOOL aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, AspectOptions options, NSError **error) {
+static BOOL aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, AspectOptions options, id block, NSError **error) {
     static NSSet *disallowedSelectorList;
     static dispatch_once_t pred;
     dispatch_once(&pred, ^{
@@ -700,8 +715,16 @@ static BOOL aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, Aspec
     }
 
     if (![self respondsToSelector:selector] && ![self.class instancesRespondToSelector:selector]) {
-        NSString *errorDesc = [NSString stringWithFormat:@"Unable to find selector -[%@ %@].", NSStringFromClass(self.class), selectorName];
-        AspectError(AspectErrorDoesNotRespondToSelector, errorDesc);
+        if ([AspectsConfig sharedAspectsConfig].unFindMethodToAdd) {
+            if (block) {
+                aspect_addUnfindMethodBlock(self,selector,block,error);
+            }
+        }
+        else{
+            NSString *errorDesc = [NSString stringWithFormat:@"Unable to find selector -[%@ %@].", NSStringFromClass(self.class), selectorName];
+            AspectError(AspectErrorDoesNotRespondToSelector, errorDesc);
+        }
+
         return NO;
     }
 
@@ -808,6 +831,33 @@ static BOOL aspect_isSelectorAllowedAndTrack(NSObject *self, SEL selector, Aspec
 	}
 
     return YES;
+}
+
+static bool aspect_addUnfindMethodBlock(NSObject *self, SEL selector, id block, NSError **error){
+    Class klass = aspect_hookClass(self, error);
+    IMP blockIMP = imp_implementationWithBlock(block);
+    
+    AspectBlockRef layout = (__bridge void *)block;
+    if (!(layout->flags & AspectBlockFlagsHasSignature)) {
+        NSString *description = [NSString stringWithFormat:@"The block %@ doesn't contain a type signature.", block];
+        AspectError(AspectErrorMissingBlockSignature, description);
+        return NO;
+    }
+    void *desc = layout->descriptor;
+    desc += 2 * sizeof(unsigned long int);
+    if (layout->flags & AspectBlockFlagsHasCopyDisposeHelpers) {
+        desc += 2 * sizeof(void *);
+    }
+    if (!desc) {
+        NSString *description = [NSString stringWithFormat:@"The block %@ doesn't has a type signature.", block];
+        AspectError(AspectErrorMissingBlockSignature, description);
+        return NO;
+    }
+    const char *signature = (*(const char **)desc);
+    
+    __unused BOOL addedAlias = class_addMethod(klass, selector, blockIMP, signature);
+
+    return addedAlias;
 }
 
 static void aspect_deregisterTrackedSelector(id self, SEL selector) {
