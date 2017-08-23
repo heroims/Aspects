@@ -24,6 +24,7 @@
 		7376F8C31B8EA670009CAB74 /* Aspects.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Aspects.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		7376F8C71B8EA670009CAB74 /* Info-watch.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Info-watch.plist"; sourceTree = "<group>"; };
 		84E132BC1F4C30A800225706 /* Aspects.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Aspects.podspec; sourceTree = "<group>"; };
+		84E132BD1F4C340800225706 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -72,6 +73,7 @@
 		34B986691B1DE0CE00DE719D /* Aspects */ = {
 			isa = PBXGroup;
 			children = (
+				84E132BD1F4C340800225706 /* README.md */,
 				84E132BC1F4C30A800225706 /* Aspects.podspec */,
 				34B9866C1B1DE0CE00DE719D /* Aspects.h */,
 				34B986841B1DE2BE00DE719D /* Aspects.m */,

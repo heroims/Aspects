@@ -9,7 +9,16 @@
 #import "AspectsViewController.h"
 #import "Aspects.h"
 
+@interface AspectsViewController ()
+-(void)aaaa:(id)a bbbb:(id)b;
+@end
 @implementation AspectsViewController
+
+-(void)viewDidLoad{
+    [super viewDidLoad];
+    [self aaaa:@"sss" bbbb:@"fff"];
+    [self performSelector:@selector(cccc:) withObject:@"mmm"];
+}
 
 - (IBAction)buttonPressed:(id)sender {
     UIViewController *testController = [[UIImagePickerController alloc] init];
@@ -24,7 +33,6 @@
             [[[UIAlertView alloc] initWithTitle:@"Popped" message:@"Hello from Aspects" delegate:nil cancelButtonTitle:nil otherButtonTitles:@"Ok", nil] show];
         }
     } error:NULL];
-
     // Hooking dealloc is delicate, only AspectPositionBefore will work here.
     [testController aspect_hookSelector:NSSelectorFromString(@"dealloc") withOptions:AspectPositionBefore usingBlock:^(id<AspectInfo> info) {
         NSLog(@"Controller is about to be deallocated: %@", [info instance]);
