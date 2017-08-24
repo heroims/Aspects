@@ -1,4 +1,4 @@
-AspectsPlus  ![](http://cocoapod-badges.herokuapp.com/v/AspectsPlus/badge.png) ![](http://cocoapod-badges.herokuapp.com/p/AspectsPlus/badge.png) [![Build Status](https://travis-ci.org/heroims/AspectsPlus.svg?branch=master)](https://travis-ci.org/heroims/AspectsPlus) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
+AspectsPlus  ![](http://cocoapod-badges.herokuapp.com/v/AspectsPlus/badge.png) ![](http://cocoapod-badges.herokuapp.com/p/AspectsPlus/badge.png) [![Build Status](https://travis-ci.org/heroims/AspectsPlus.svg?branch=master)](https://travis-ci.org/heroims/AspectsPlus) [![codecov](https://codecov.io/gh/heroims/AspectsPlus/branch/master/graph/badge.svg)](https://codecov.io/gh/heroims/AspectsPlus) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-4BC51D.svg?style=flat)](https://github.com/Carthage/Carthage)
 ==============
 
 AspectsPlus is a new implementation based on [Aspects](https://github.com/steipete/Aspects).
