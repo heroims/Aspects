@@ -6,4 +6,4 @@ script:
 - xcodebuild -project AspectsDemoOSX/AspectsDemoOSX.xcodeproj -scheme AspectsDemoOSX test GCC_INSTRUMENT_PROGRAM_FLOW_ARCS=YES GCC_GENERATE_TEST_COVERAGE_FILES=YES
 
 after_success:
-  - bash <(curl -s https://codecov.io/bash) -t : a42644f4-7286-452d-8117-c89131a7aea1
+  - bash <(curl -s https://codecov.io/bash)
