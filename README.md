@@ -187,42 +187,7 @@ You can use the invocation object to customize the return value:
 
 Installation
 ------------
-The simplest option is to use `pod "Aspects"`.
+The simplest option is to use `pod "AspectsPlus"`.
 
 You can also add the two files `Aspects.h/m` to your project. There are no further requirements.
-
-Compatibility and Limitations
------------------------------
-Aspects uses quite some runtime trickery to achieve what it does. You can mostly mix this with regular method swizzling.
-
-An important limitation is that for class-based hooking, a method can only be hooked once within the subclass hierarchy. [See #2](https://github.com/steipete/Aspects/issues/2)
-This does not apply for objects that are hooked. Aspects creates a dynamic subclass here and has full control.
-
-KVO works if observers are created after your calls `aspect_hookSelector:` It most likely will crash the other way around. Still looking for workarounds here - any help appreciated.
-
-Because of ugly implementation details on the ObjC runtime, methods that return unions that also contain structs might not work correctly unless this code runs on the arm64 runtime.
-
-Credits
--------
-The idea to use `_objc_msgForward` and parts of the `NSInvocation` argument selection is from the excellent [ReactiveCocoa](https://github.com/ReactiveCocoa/ReactiveCocoa) from the GitHub guys. [This article](http://codeshaker.blogspot.co.at/2012/01/aop-delivered.html) explains how it works under the hood.
-
-
-Supported iOS & SDK Versions
------------------------------
-
-* Aspects requires ARC.
-* Aspects is tested with iOS 7+ and OS X 10.7 or higher.
-
-License
--------
-MIT licensed, Copyright (c) 2014 Peter Steinberger, steipete@gmail.com, [@steipete](http://twitter.com/steipete)
-
-
-Release Notes
------------------
-
-Version 1.0
-
-- Allow to hook different subclasses.
-- Smaller tweaks.
 
